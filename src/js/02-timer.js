@@ -77,3 +77,64 @@ const clearTimer = () => {
 const addLeadingZero = value => {
   return value.toString().padStart(2, '0');
 };
+
+const startCountdown = () => {
+  timerId = setInterval(() => {
+    timeDiff -= 1000;
+    if (timeDiff < 1000) {
+      Notiflix.Report.success('the end!', 'You know nothing', 'Close');
+      stopCountdown();
+    } else {
+      updateTimer(convertMs(timeDiff));
+    }
+  }, 1000);
+  console.log('timerId', timerId);
+  console.log('btnStart.addEventListener timeChosen[0]', timeChosen[0]);
+  console.log('btnStart.addEventListener timeDiff', timeDiff);
+
+  btnStop.disabled = false;
+  btnStart.disabled = true;
+};
+
+const stopCountdown = () => {
+  console.log('btnStop.addEventListener timeChosen[0]', timeChosen[0]);
+  clearTimer();
+  btnStart.disabled = false;
+  btnStop.disabled = true;
+  clearInterval(timerId);
+};
+
+const convertMs = ms => {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+};
+
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  weekNumbers: true,
+  onClose(timeChosen) {
+    console.log('onClose timeChosen[0] wybrano (string):', timeChosen[0]);
+    console.log('onClose timeChosen wybrano (obiekt):', timeChosen);
+    timeDiff = timeChosen[0] - timeNow;
+    console.log('onClose roznica w ms timeDiff:', timeDiff);
+    console.log('onClose convertMs(timeDiff)', convertMs(timeDiff));
+    checkChosenDate(timeChosen);
+  },
+};
+
+flatpickr('#date-selector', options);
+
+btnStart.addEventListener('click', startCountdown);
+btnStop.addEventListener('click', stopCountdown);
