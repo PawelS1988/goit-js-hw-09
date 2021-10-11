@@ -39,3 +39,41 @@ console.log('timeNow', timeNow);
 
 btnStart.disabled = true;
 btnStop.disabled = true;
+
+const checkChosenDate = timeChosen => {
+  if (timeDiff <= 0) {
+    Notiflix.Notify.failure('Please choose a date in the future');
+    console.log('checkChosenDate if timeChosen: 0:', timeChosen);
+    console.log('timeChosen[0]: undefined:', timeChosen[0]);
+    console.log('timeNow', timeNow);
+    console.log('timeDiff', timeDiff);
+  } else {
+    Notiflix.Notify.info('Now you can click "Start"');
+    btnStart.disabled = false;
+
+    console.log('checkChosenDate else timeChosen', timeChosen);
+    console.log('timeChosen[0]', timeChosen[0]);
+    console.log('timeNow', timeNow);
+    console.log('timeDiff', timeDiff);
+  }
+};
+
+const updateTimer = ({ days, hours, minutes, seconds }) => {
+  daysLeft.innerHTML = addLeadingZero(days);
+  hoursLeft.innerHTML = addLeadingZero(hours);
+  minutesLeft.innerHTML = addLeadingZero(minutes);
+  secondsLeft.innerHTML = addLeadingZero(seconds);
+};
+
+const clearTimer = () => {
+  console.log('stopCountdown timerId', timerId);
+  timeDiff = 0;
+  daysLeft.innerHTML = '00';
+  hoursLeft.innerHTML = '00';
+  minutesLeft.innerHTML = '00';
+  secondsLeft.innerHTML = '00';
+};
+
+const addLeadingZero = value => {
+  return value.toString().padStart(2, '0');
+};
